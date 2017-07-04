@@ -20,6 +20,7 @@ private:
     PtsLis* ptslis;
 public:
     double calcFeroNorm();
+    double F();
 };
 
 

@@ -24,3 +24,7 @@ double DepResult::calcFeroNorm() {
     }
     return norm;
 }
+
+double DepResult::F(){
+    return calcFeroNorm();
+}

@@ -38,6 +38,7 @@ void PtsLis::readFile() {
     std::string tmp_string;
 
     if (myInFile.is_open()) {
+        int bsp_count = 0;
         while (std::getline(myInFile, line)) {
             //store the lines
             std::stringstream ss(line);
@@ -96,13 +97,14 @@ void PtsLis::readFile() {
                             }
                         }
                     } else {
-                        tmp_pt.setFlag(-1);
+                        tmp_pt.setFlag(-i + bsp_count*10);
                         // internal points of bspline are all non-fixed
                         tmp_pt.setFixed(false);
                     }
                     bsp.addNextPoint(tmp_pt);
                 }
                 bsps.push_back(bsp);
+                bsp_count--;
             }
         }
     }
@@ -140,9 +142,12 @@ void PtsLis::printFile() {
     myOutFile.close();
 }
 
-void PtsLis::setOptimizationSpace() {
-    for (size_t i=0; i<){
-
-    }
+std::vector <Point> PtsLis::getControlPoints() {
+    return control_points;
 }
+
+std::vector <BSpline> PtsLis::getBSplines() {
+    return bsplines;
+}
+
 

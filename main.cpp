@@ -1,5 +1,7 @@
 
 #include "PtsLis.h"
+#include "DepResult.h"
+#include "Manager.h"
 
 int main() {
     PtsLis crntPtsLis;
@@ -7,6 +9,11 @@ int main() {
     crntPtsLis.setOutputFileName("pts1.lis")
     crntPtsLis.readFile();
     crntPtsLis.printFile();
+
+    DepResult crntDepResult;
+
+    Manager manager();
+
 
 
 
