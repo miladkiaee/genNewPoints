@@ -4,11 +4,12 @@
 
 #include "Point.h"
 
-Point::Point (size_t f, double xx, double yy, double zz){
+Point::Point (int f, double xx, double yy, double zz){
     flag = f;
     x = xx;
     y = yy;
     z = zz;
+    flag = true;
 }
 
 double Point::getX() {
@@ -21,6 +22,10 @@ double Point::getY() {
 
 double Point::getZ() {
     return z;
+}
+
+int Point::getFlag() {
+    return flag;
 }
 
 void Point::setFlag(size_t f) {
@@ -43,4 +48,12 @@ void Point::print(){
     std::cout << "Point: " << x
               << " " << y
               << " " << z << std::endl;
+}
+
+void Point::setFixed(bool f) {
+    fixed = f;
+}
+
+bool Point::isFixed() {
+    return fixed;
 }

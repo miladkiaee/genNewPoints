@@ -4,36 +4,27 @@
 
 #include "BSpline.h"
 
-BSpline::BSpline():first_point(0,0,0,0),
-                   last_point(0,0,0,0) {
-}
-
 void BSpline::setNumPoints(size_t np) {
     num_points = np;
 }
 
-void BSpline::setFirstPoint(Point fp) {
-    first_point.setX(fp.getX());
-    first_point.setY(fp.getY());
-    first_point.setZ(fp.getZ());
-}
-
-void BSpline::setLastPoint(Point lp) {
-    last_point.setX(lp.getX());
-    last_point.setY(lp.getY());
-    last_point.setZ(lp.getZ());
-}
 
 void BSpline::addNextPoint(Point p) {
-    internal_points.push_back(p);
+    all_points.push_back(p);
 
+}
+
+size_t BSpline::getNumPoints() {
+    return num_points;
+}
+
+Point BSpline::getPoint(size_t i) {
+    return all_points[i];
 }
 
 void BSpline::print(){
     std::cout << "BSpline:" << std::endl;
-    first_point.print();
     for (size_t i=0; i<num_points; i++){
-        internal_points[i].print();
+        all_points[i].print();
     }
-    last_point.print();
 }

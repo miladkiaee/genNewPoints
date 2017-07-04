@@ -11,19 +11,23 @@
 
 class Point {
 private:
-    size_t flag;
+    int flag; // only points with postive flags are considered to be control points
     double x;
     double y;
     double z;
+    bool fixed; // should the point be fixed in optimization default is true
 public:
-    Point(size_t, double, double, double);
+    Point(int, double, double, double);
     double getX();
     double getY();
     double getZ();
+    int getFlag();
     void setFlag(size_t);
     void setX(double);
     void setY(double);
     void setZ(double);
+    void setFixed(bool);
+    bool isFixed();
     void print();
 };
 

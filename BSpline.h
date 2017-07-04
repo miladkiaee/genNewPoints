@@ -12,16 +12,16 @@
 
 class BSpline {
 private:
+    // internal points will have the -1 flag
     size_t num_points;
-    Point first_point;
-    Point last_point;
-    std::vector<Point> internal_points;
+    std::vector<Point> all_points;
 public:
-    BSpline();
     void setNumPoints(size_t);
     void setFirstPoint(Point);
     void setLastPoint(Point);
     void addNextPoint(Point);
+    size_t getNumPoints();
+    Point getPoint(size_t);
     void print();
 };
 
