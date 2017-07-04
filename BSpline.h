@@ -17,11 +17,12 @@ private:
     Point last_point;
     std::vector<Point> internal_points;
 public:
-    BSpline(size_t);
-    void changeNumPoints(size_t);
+    BSpline();
+    void setNumPoints(size_t);
     void setFirstPoint(Point);
     void setLastPoint(Point);
-    void setInternalPoint(size_t, Point);
+    void addNextPoint(Point);
+    void print();
 };
 
 

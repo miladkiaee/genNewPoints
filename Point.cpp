@@ -4,22 +4,22 @@
 
 #include "Point.h"
 
-Point::Point (size_t f, double xx, double yy, double zz{
+Point::Point (size_t f, double xx, double yy, double zz){
     flag = f;
     x = xx;
     y = yy;
     z = zz;
 }
 
-double Point::getx() {
+double Point::getX() {
     return x;
 }
 
-double Point::gety() {
+double Point::getY() {
     return y;
 }
 
-double Point::getz() {
+double Point::getZ() {
     return z;
 }
 
@@ -37,4 +37,10 @@ void Point::setY(double yy){
 
 void Point::setZ(double zz){
     z = zz;
+}
+
+void Point::print(){
+    std::cout << "Point: " << x
+              << " " << y
+              << " " << z << std::endl;
 }

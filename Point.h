@@ -7,6 +7,7 @@
 
 
 #include <cstdio>
+#include <iostream>
 
 class Point {
 private:
@@ -23,6 +24,7 @@ public:
     void setX(double);
     void setY(double);
     void setZ(double);
+    void print();
 };
 
 
