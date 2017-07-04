@@ -12,7 +12,7 @@ int main() {
 
     DepResult crntDepResult;
 
-    Manager manager();
+    Manager manager(crntPtsLis, crntDepResult);
 
 
 
