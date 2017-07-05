@@ -12,6 +12,6 @@ size_t ResultMatrix::getN() {
     return n;
 }
 
-size_t ResultMatrix::getA(size_t i, size_t j) {
+double ResultMatrix::getA(size_t i, size_t j) {
     return a[i][j];
 }

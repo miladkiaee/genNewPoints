@@ -6,7 +6,7 @@
 int main() {
     PtsLis crntPtsLis;
     crntPtsLis.setInputFileName("pts.lis");
-    crntPtsLis.setOutputFileName("pts1.lis")
+    crntPtsLis.setOutputFileName("pts1.lis");
     crntPtsLis.readFile();
     crntPtsLis.printFile();
 
@@ -14,10 +14,7 @@ int main() {
 
     Manager manager(crntPtsLis, crntDepResult);
 
-
-
-
-
+    manager.generateBranches();
 
     return 0;
 }

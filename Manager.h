@@ -12,7 +12,7 @@ private:
     double delta;
     PtsLis parent_geom;
     DepResult parent_result;
-    std::vector <PtsLis> branches;
+    std::vector <PtsLis> branch_geoms;
     std::vector<Point> optimization_points;
     //double value specifies the x value for each point (each point have one component to the
     // gradient vector), points here are basically optimization points
@@ -24,8 +24,6 @@ public:
     void generateBranches();
 
 
-
 };
-
 
 #endif //GENNEWPOINTS_MANAGER_H

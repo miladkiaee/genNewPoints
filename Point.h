@@ -15,7 +15,6 @@ private:
     double x;
     double y;
     double z;
-    bool fixed; // should the point be fixed in optimization default is true
 public:
     Point(int, double, double, double);
     double getX();
@@ -26,8 +25,6 @@ public:
     void setX(double);
     void setY(double);
     void setZ(double);
-    void setFixed(bool);
-    bool isFixed();
     void print();
 };
 

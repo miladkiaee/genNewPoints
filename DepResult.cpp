@@ -18,7 +18,8 @@ double DepResult::calcFeroNorm() {
             // over rows or diameter
             for (size_t j = 0; j < n; j++) {
                 // over columns or u0
-                norm += pow(regional_dep[q].getA(i, j) - ref_regional_dep[q].getA(i, j), 2);
+                norm += pow(regional_dep[q].getA(i, j)
+                            - ref_regional_dep[q].getA(i, j), 2);
             }
         }
     }

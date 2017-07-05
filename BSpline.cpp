@@ -10,7 +10,7 @@ void BSpline::setNumPoints(size_t np) {
 
 
 void BSpline::addNextPoint(Point p) {
-    all_points.push_back(p);
+    internal_points.push_back(p);
 
 }
 
@@ -19,12 +19,12 @@ size_t BSpline::getNumPoints() {
 }
 
 Point BSpline::getPoint(size_t i) {
-    return all_points[i];
+    return internal_points[i];
 }
 
 void BSpline::print(){
     std::cout << "BSpline:" << std::endl;
     for (size_t i=0; i<num_points; i++){
-        all_points[i].print();
+        internal_points[i].print();
     }
 }

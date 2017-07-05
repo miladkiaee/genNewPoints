@@ -9,7 +9,6 @@ Point::Point (int f, double xx, double yy, double zz){
     x = xx;
     y = yy;
     z = zz;
-    flag = true;
 }
 
 double Point::getX() {
@@ -48,12 +47,4 @@ void Point::print(){
     std::cout << "Point: " << x
               << " " << y
               << " " << z << std::endl;
-}
-
-void Point::setFixed(bool f) {
-    fixed = f;
-}
-
-bool Point::isFixed() {
-    return fixed;
 }
