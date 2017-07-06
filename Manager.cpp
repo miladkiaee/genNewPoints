@@ -4,10 +4,10 @@
 
 #include "Manager.h"
 
-Manager::Manager(PtsLis ptslis, DepResult depres): delta(0.00001)
+Manager::Manager(double d, PtsLis ptslis)
 {
-    parent_geom = ptslis; // @todo copy constructor should be made for this to work
-    parent_result = depres; // @todo same as above
+    delta = d;
+    parent_geom = ptslis;
 }
 
 void Manager::setOptimizationPoints()
@@ -16,14 +16,7 @@ void Manager::setOptimizationPoints()
     // second index for the index within the spline
     // third index should be x y or z for now we
     // consider all to be 0 showing x variation only
-    for (size_t i1=0; i1<parent_geom.getBSplines().size(); i1++ )
-    {
-        for (size_t i2=0; i2<parent_geom.getBSplines()[i1].getNumPoints(); i2++)
-        {
-            optimization_points.push_back(
-                    parent_geom.getBSplines()[i1].getPoint(i2));
-        }
-    }
+
 }
 
 void Manager::calcGradientVector()
@@ -31,3 +24,20 @@ void Manager::calcGradientVector()
 
 }
 
+void Manager::genPtsLisFiles() {
+    size_t N = parent_geom.getPoints().size();
+
+    for (size_t i=0; i<N; i++){
+        std::ofstream file;
+        PtsLis ptslis;
+        ptslis = parent_geom;
+        ptslis.differOnePoint(i, delta);
+        std::ostringstream oss;
+        std::string s;
+        oss << "_" << i;
+        s = ptslis.getInputFileName() + oss.str();
+        ptslis.setOutputFileName(s.c_str());
+        ptslis.printFile();
+        file.close();
+    }
+}

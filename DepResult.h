@@ -3,7 +3,7 @@
 //
 
 /*
- * regions: 0-Vestibule 1-Valve 2-Valve 3-Anterior 4-Posterior 5-Olfactory 6-Nasopharynx
+ * regions: 1-Vestibule 2-Valve 3-Olfactory 4-Anterior 5-Posterior 6-Naso
  * fractions
  */
 
@@ -15,12 +15,18 @@
 
 class DepResult {
 private:
-    std::vector<ResultMatrix> regional_dep; // contains 6 regional deposition matrices
-    std::vector<ResultMatrix> ref_regional_dep; // contains 6 regional reference deposition matrices
-    PtsLis* ptslis;
+    std::vector<ResultMatrix> regional_deps; // average contains 6 regional deposition matrices
+    std::vector<ResultMatrix> ref_regional_deps; // contains 6 regional reference deposition matrices
+    double norm;
 public:
-    double calcFeroNorm();
+    DepResult();
+    DepResult &operator=(DepResult);
+    std::vector<ResultMatrix> getRegionalDep();
+    std::vector<ResultMatrix> getRefRegionalDep();
+    void readLogFiles(std::string);
     double F();
+    void addToNormFile();
+
 };
 
 

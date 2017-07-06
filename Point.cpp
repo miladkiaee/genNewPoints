@@ -4,7 +4,7 @@
 
 #include "Point.h"
 
-Point::Point (int f, double xx, double yy, double zz){
+Point::Point (std::string f, double xx, double yy, double zz){
     flag = f;
     x = xx;
     y = yy;
@@ -23,11 +23,11 @@ double Point::getZ() {
     return z;
 }
 
-int Point::getFlag() {
+std::string Point::getFlag() {
     return flag;
 }
 
-void Point::setFlag(size_t f) {
+void Point::setFlag(std::string f) {
     flag = f;
 }
 

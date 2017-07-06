@@ -11,17 +11,17 @@
 
 class Point {
 private:
-    int flag; // only points with postive flags are considered to be control points
+    std::string flag; // only points with postive flags are considered to be control points
     double x;
     double y;
     double z;
 public:
-    Point(int, double, double, double);
+    Point(std::string, double, double, double);
     double getX();
     double getY();
     double getZ();
-    int getFlag();
-    void setFlag(size_t);
+    std::string getFlag();
+    void setFlag(std::string);
     void setX(double);
     void setY(double);
     void setZ(double);

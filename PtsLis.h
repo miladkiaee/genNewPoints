@@ -6,28 +6,31 @@
 #define GENNEWPOINTS_PTSLIS_H
 
 
-#include "BSpline.h"
 #include <fstream>
 #include <sstream>
 #include <utility>
+#include <vector>
+#include "Point.h"
 
 class PtsLis {
 private:
     std::string input_file_name;
     std::string output_file_name;
-    std::vector<Point> control_points;
-    std::vector<BSpline> bsplines;
+    std::vector<Point> points;
+    //std::vector<BSpline> bsplines;
 
 
 public:
+    PtsLis & operator= (PtsLis);
     void setInputFileName(std::string);
     std::string getInputFileName();
     void setOutputFileName(std::string);
     std::string getOutputFileName();
-    std::vector <BSpline> getBSplines();
-    std::vector <Point> getControlPoints();
-    void setControlPoints(std::vector<Point>);
-    void setBSplines(std::vector<BSpline>);
+    //std::vector <BSpline> getBSplines();
+    std::vector <Point> getPoints();
+    void setPoints(std::vector<Point>);
+    //void setBSplines(std::vector<BSpline>);
+    void differOnePoint(size_t, double);
     void readFile();
     void printFile();
 
