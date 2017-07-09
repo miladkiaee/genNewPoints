@@ -15,6 +15,7 @@
 
 class DepResult {
 private:
+    size_t n_injection_points; // number of position of particle injector tip
     std::vector<ResultMatrix> regional_deps; // average contains 6 regional deposition matrices
     std::vector<ResultMatrix> ref_regional_deps; // contains 6 regional reference deposition matrices
     double norm;
@@ -23,10 +24,10 @@ public:
     DepResult &operator=(DepResult);
     std::vector<ResultMatrix> getRegionalDep();
     std::vector<ResultMatrix> getRefRegionalDep();
+    void setNumberOfInjectionPoints(size_t);
     void readLogFiles(std::string);
-    double F();
+    void F();
     void addToNormFile();
-
 };
 
 

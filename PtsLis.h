@@ -17,6 +17,7 @@ private:
     std::string input_file_name;
     std::string output_file_name;
     std::vector<Point> points;
+    size_t n_points;
     //std::vector<BSpline> bsplines;
 
 
@@ -26,6 +27,8 @@ public:
     std::string getInputFileName();
     void setOutputFileName(std::string);
     std::string getOutputFileName();
+    size_t getNumPoints();
+    void setNumPoints(size_t);
     //std::vector <BSpline> getBSplines();
     std::vector <Point> getPoints();
     void setPoints(std::vector<Point>);
@@ -33,7 +36,6 @@ public:
     void differOnePoint(size_t, double);
     void readFile();
     void printFile();
-
 };
 
 

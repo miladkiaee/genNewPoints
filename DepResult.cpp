@@ -24,9 +24,12 @@ std::vector <ResultMatrix> DepResult::getRefRegionalDep() {
     return ref_regional_deps;
 }
 
+void DepResult::setNumberOfInjectionPoints(size_t n) {
+    n_injection_points = n;
+}
+
 void DepResult::readLogFiles(std::string filename){
 
-    size_t N = 10; // number of positions
     std::ifstream file;
     std::vector <std::string> regions = {"Vestibule", "Valve", "Olfactory"
             , "Anterior", "Posterior", "Naso"};
@@ -35,7 +38,7 @@ void DepResult::readLogFiles(std::string filename){
     std::vector<double> diam = {5, 10, 15, 20, 40}; //micron
 
     // file format is log_number_diam_u0
-    for (size_t i=0; i<N; i++) {
+    for (size_t i=0; i<n_injection_points; i++) {
         for (size_t m=0; m<5; m++) {
             for (size_t n; n<4; n++) {
                 char c;
@@ -59,19 +62,17 @@ void DepResult::readLogFiles(std::string filename){
                         if (lines[i].find(regions[j]) != std::string::npos) {
                             std::stringstream ss(lines[i - 2]);
                             ss >> c >> tmp >> c >> value;
-
                             regional_deps[j].addToA(m, n, value);
                             break;
                         }
                     }
                 }
                 file.close();
-
             }
         }
     }
     for (int j = 0; j < 6; j++) {
-        regional_deps[j].devideABy(N);
+        regional_deps[j].devideABy(n_injection_points);
     }
 }
 
@@ -96,6 +97,7 @@ void DepResult::F() {
 
 void DepResult::addToNormFile() {
     std::ofstream file;
+    F();
     file.open("norm.tmp", std::fstream::app);
     file << norm << std::endl;
     file.close();

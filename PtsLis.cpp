@@ -9,6 +9,7 @@ PtsLis & PtsLis::operator=(PtsLis A) {
     input_file_name = A.getInputFileName();
     output_file_name = A.getOutputFileName();
     points = A.getPoints();
+    n_points = A.getNumPoints();
     return *this;
 }
 
@@ -37,6 +38,14 @@ std::string PtsLis::getOutputFileName()
     return output_file_name;
 }
 
+size_t PtsLis::getNumPoints() {
+    return n_points;
+}
+
+void PtsLis::setNumPoints(size_t n) {
+    n_points = n;
+}
+
 void PtsLis::readFile()
 {
     std::ifstream myInFile;
@@ -63,9 +72,10 @@ void PtsLis::readFile()
     }
     else
     {
-        std::cout << "Error! check if the file is open ..."
+        std::cout << "Error! check if the pts.files can be opened ..."
                   << std::endl;
     }
+    n_points = cps.size();
     this->setPoints(cps);
     myInFile.close();
 }
