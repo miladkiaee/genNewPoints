@@ -6,13 +6,15 @@
 #include "math.h"
 
 DepResult::DepResult() {
-    regional_deps= std::vector<ResultMatrix> (6);
+    regional_deps= std::vector<ResultMatrix> (6); //uses the default constructor of ResultMatrix
     ref_regional_deps= std::vector<ResultMatrix> (6);
+    num_particle = 10000;
 }
 
 DepResult& DepResult::operator=(DepResult A) {
     regional_deps = A.getRegionalDep();
     ref_regional_deps = A.getRefRegionalDep();
+    num_particle = A.getNumParticle();
     return *this;
 }
 
@@ -26,6 +28,14 @@ std::vector <ResultMatrix> DepResult::getRefRegionalDep() {
 
 void DepResult::setNumberOfInjectionPoints(size_t n) {
     n_injection_points = n;
+}
+
+void DepResult::setNumParticle(size_t n) {
+    num_particle = n;
+}
+
+size_t DepResult::getNumParticle() {
+    return num_particle;
 }
 
 void DepResult::readLogFiles(std::string filename){
@@ -56,12 +66,12 @@ void DepResult::readLogFiles(std::string filename){
                     }
                 }
                 int value;
-
                 for (int j = 0; j < 6; j++) {
                     for (int i = 0; i < lines.size(); i++) {
                         if (lines[i].find(regions[j]) != std::string::npos) {
                             std::stringstream ss(lines[i - 2]);
                             ss >> c >> tmp >> c >> value;
+                            value /= num_particle; //normalized deposition
                             regional_deps[j].addToA(m, n, value);
                             break;
                         }
@@ -77,7 +87,6 @@ void DepResult::readLogFiles(std::string filename){
 }
 
 void DepResult::F() {
-
     size_t m = regional_deps[0].getM();
     size_t n = regional_deps[0].getN();
 

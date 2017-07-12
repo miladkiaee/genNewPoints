@@ -19,6 +19,7 @@ private:
     std::vector<ResultMatrix> regional_deps; // average contains 6 regional deposition matrices
     std::vector<ResultMatrix> ref_regional_deps; // contains 6 regional reference deposition matrices
     double norm;
+    size_t num_particle;
 public:
     DepResult();
     DepResult &operator=(DepResult);
@@ -26,8 +27,11 @@ public:
     std::vector<ResultMatrix> getRefRegionalDep();
     void setNumberOfInjectionPoints(size_t);
     void readLogFiles(std::string);
+    void setNumParticle(size_t);
+    size_t getNumParticle();
     void F();
     void addToNormFile();
+    void print();
 };
 
 
