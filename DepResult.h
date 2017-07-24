@@ -26,6 +26,7 @@ public:
     std::vector<ResultMatrix> getRegionalDep();
     std::vector<ResultMatrix> getRefRegionalDep();
     void setNumberOfInjectionPoints(size_t);
+    void readRefFiles();
     void readLogFiles(std::string);
     void setNumParticle(size_t);
     size_t getNumParticle();

@@ -38,6 +38,33 @@ size_t DepResult::getNumParticle() {
     return num_particle;
 }
 
+void DepResult::readRefFiles(){
+    std::vector <std::string> regions = {"vesti", "valve", "olf"
+            , "anterior", "posterior", "naso"};
+    for (size_t i=0; i<6; i++){
+        std::ifstream file;
+        std::string s;
+        std::ostringstream oss;
+        oss << "ref_" << regions[i] << ".txt";
+        s = oss.str();
+        file.open(s.c_str());
+        double x0, x1, x2, x3;
+        std::string line;
+        size_t line_num = 0;
+        while (file.is_open()) {
+            getline(file, line);
+            std::stringstream ss(line);
+            ss << x0 << x1 << x2 << x3;
+            ref_regional_deps[i].setA(line_num, 0, x0);
+            ref_regional_deps[i].setA(line_num, 1, x1);
+            ref_regional_deps[i].setA(line_num, 2, x2);
+            ref_regional_deps[i].setA(line_num, 3, x3);
+            line_num++;
+        }
+        file.close();
+    }
+}
+
 void DepResult::readLogFiles(std::string filename){
 
     std::ifstream file;
@@ -47,7 +74,7 @@ void DepResult::readLogFiles(std::string filename){
     std::vector<double> u0 = {0, 5, 10, 20};
     std::vector<double> diam = {5, 10, 15, 20, 40}; //micron
 
-    // file format is log_number_diam_u0
+    // file format is plog_number_diam_u0
     for (size_t i=0; i<n_injection_points; i++) {
         for (size_t m=0; m<5; m++) {
             for (size_t n; n<4; n++) {
@@ -57,7 +84,7 @@ void DepResult::readLogFiles(std::string filename){
                 std::string line;
                 std::ostringstream oss;
                 std::string s;
-                oss << "_" << i << diam[m] << "_" << u0[n];
+                oss << "-" << i << "-" << diam[m] << "-" << u0[n];
                 s = filename + oss.str();
                 file.open(s.c_str());
                 if (file.is_open()) {

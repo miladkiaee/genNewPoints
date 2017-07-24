@@ -22,7 +22,8 @@ int main(int argc, char* argv[]) {
     {
         DepResult dep;
         dep.setNumberOfInjectionPoints(10);
-        dep.readLogFiles("log");
+        dep.readRefFiles(); //reads the reference values
+        dep.readLogFiles("plog");
         dep.addToNormFile();
     }
 
