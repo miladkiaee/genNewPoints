@@ -4,7 +4,6 @@
 
 #include "PtsLis.h"
 
-
 PtsLis & PtsLis::operator=(PtsLis A) {
     input_file_name = A.getInputFileName();
     output_file_name = A.getOutputFileName();

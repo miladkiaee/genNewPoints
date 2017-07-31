@@ -2,13 +2,13 @@
 #include "PtsLis.h"
 #include "DepResult.h"
 #include "Manager.h"
-#include <cstdlib>
+
 
 int main(int argc, char* argv[]) {
 
     std::string input = argv[1];
 
-    if (input == "gen_pts_files")
+    if (input == "gen_pts")
     {
         PtsLis crntPtsLis;
         crntPtsLis.setInputFileName("pts.lis");
@@ -18,7 +18,7 @@ int main(int argc, char* argv[]) {
         manager.printPtsLisFiles();
     }
 
-    if (input == "append_norm_file")
+    if (input == "app_norm")
     {
         DepResult dep;
         dep.setNumberOfInjectionPoints(10);
@@ -26,9 +26,8 @@ int main(int argc, char* argv[]) {
         dep.readLogFiles("plog");
         dep.addToNormFile();
     }
-
     // generates the new set of ptslis objects
-    if (input == "update_pts_grad_files")
+    if (input == "update")
     {
         Manager manager;
         manager.update();
@@ -38,5 +37,3 @@ int main(int argc, char* argv[]) {
 
     return 0;
 }
-
-

@@ -44,7 +44,19 @@ void ResultMatrix::addToA(size_t i, size_t j, double b) {
     a[i][j] += b;
 }
 
-void ResultMatrix::devideABy(size_t k) {
+void ResultMatrix::printA(){
+    std::cout << " - - - " << std::endl;
+    std::cout << "A = " << std::endl;
+    for (size_t i=0; i<m; i++){
+        for (size_t j=0; j<n; j++){
+            std::cout << " " << a[i][j];
+         }
+        std::cout << std::endl;
+    }
+    std::cout << " - - - " << std::endl;
+}
+
+void ResultMatrix::devideABy(double k) {
     for (size_t i; i<m; i++){
         for (size_t j=0; j<n; j++){
             a[i][j] /= k;

@@ -23,7 +23,8 @@ public:
     double getA(size_t, size_t);
     void setA(size_t, size_t, double);
     void addToA(size_t, size_t, double);
-    void devideABy(size_t);
+    void printA();
+    void devideABy(double);
 };
 
 

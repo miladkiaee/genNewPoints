@@ -4,6 +4,7 @@
 
 #include "DepResult.h"
 #include "math.h"
+#include <stdlib.h>
 
 DepResult::DepResult() {
     regional_deps= std::vector<ResultMatrix> (6); //uses the default constructor of ResultMatrix
@@ -39,8 +40,10 @@ size_t DepResult::getNumParticle() {
 }
 
 void DepResult::readRefFiles(){
-    std::vector <std::string> regions = {"vesti", "valve", "olf"
+    std::vector <std::string> regions =
+            {"vesti", "valve", "olf"
             , "anterior", "posterior", "naso"};
+    std::cout << "reading ref files " << std::endl;
     for (size_t i=0; i<6; i++){
         std::ifstream file;
         std::string s;
@@ -51,41 +54,45 @@ void DepResult::readRefFiles(){
         double x0, x1, x2, x3;
         std::string line;
         size_t line_num = 0;
-        while (file.is_open()) {
+        while (file.is_open() && line_num < 5) {
             getline(file, line);
             std::stringstream ss(line);
-            ss << x0 << x1 << x2 << x3;
+            ss >> x0 >> x1 >> x2 >> x3;
             ref_regional_deps[i].setA(line_num, 0, x0);
             ref_regional_deps[i].setA(line_num, 1, x1);
             ref_regional_deps[i].setA(line_num, 2, x2);
             ref_regional_deps[i].setA(line_num, 3, x3);
             line_num++;
         }
+        std::cout << i << " " << s << std::endl;
         file.close();
     }
+    std::cout << "- - - - - -" << std::endl;
 }
 
 void DepResult::readLogFiles(std::string filename){
 
     std::ifstream file;
-    std::vector <std::string> regions = {"Vestibule", "Valve", "Olfactory"
-            , "Anterior", "Posterior", "Naso"};
+    std::vector <std::string> regions = {"VESTIBULE", "VALVE", "OLF"
+            , "ANTERIOR", "POSTERIOR", "NASO"};
 
     std::vector<double> u0 = {0, 5, 10, 20};
-    std::vector<double> diam = {5, 10, 15, 20, 40}; //micron
+    std::vector<double> diam = {5e-06, 1e-05, 1.5e-05, 2e-05, 4e-05}; //micron
 
+    std::cout << "reading log files " << std::endl;
     // file format is plog_number_diam_u0
-    for (size_t i=0; i<n_injection_points; i++) {
+    for (size_t i=1; i<=n_injection_points; i++) {
         for (size_t m=0; m<5; m++) {
-            for (size_t n; n<4; n++) {
+            for (size_t n=0; n<4; n++) {
                 char c;
                 std::string tmp;
                 std::vector<std::string> lines;
                 std::string line;
                 std::ostringstream oss;
                 std::string s;
-                oss << "-" << i << "-" << diam[m] << "-" << u0[n];
+                oss << "_" << i << "_" << diam[m] << "_" << u0[n];
                 s = filename + oss.str();
+                // std::cout << s << std::endl;
                 file.open(s.c_str());
                 if (file.is_open()) {
                     while (std::getline(file, line)) {
@@ -94,12 +101,16 @@ void DepResult::readLogFiles(std::string filename){
                 }
                 int value;
                 for (int j = 0; j < 6; j++) {
-                    for (int i = 0; i < lines.size(); i++) {
-                        if (lines[i].find(regions[j]) != std::string::npos) {
-                            std::stringstream ss(lines[i - 2]);
-                            ss >> c >> tmp >> c >> value;
-                            value /= num_particle; //normalized deposition
-                            regional_deps[j].addToA(m, n, value);
+                    for (int k = line.size() - 1; k > 0; k--) {
+                        if (lines[k].find(regions[j].c_str()) !=
+                                std::string::npos) {
+                            std::stringstream ss(lines[k+2]);
+                            ss >> c >> tmp >> c >> tmp;
+                            std::stringstream tmps(tmp);
+                            std::getline(tmps, tmp, ',');
+                            value = atoi(tmp.c_str());
+                            double dvalue= double(value) / double(num_particle);
+                            regional_deps[j].addToA(m, n, dvalue);
                             break;
                         }
                     }
@@ -109,8 +120,10 @@ void DepResult::readLogFiles(std::string filename){
         }
     }
     for (int j = 0; j < 6; j++) {
-        regional_deps[j].devideABy(n_injection_points);
+        regional_deps[j].devideABy(double(n_injection_points));
+        regional_deps[j].printA();
     }
+    std::cout << "- - - - - -" << std::endl;
 }
 
 void DepResult::F() {
@@ -135,6 +148,7 @@ void DepResult::addToNormFile() {
     std::ofstream file;
     F();
     file.open("norm.tmp", std::fstream::app);
+    std::cout << "adding norm " << norm << " to norm file" << std::endl;
     file << norm << std::endl;
     file.close();
 }
