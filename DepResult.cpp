@@ -51,20 +51,21 @@ void DepResult::readRefFiles(){
         oss << "ref_" << regions[i] << ".txt";
         s = oss.str();
         file.open(s.c_str());
-        double x0, x1, x2, x3;
+        double x0, x1;
         std::string line;
         size_t line_num = 0;
-        while (file.is_open() && line_num < 5) {
+        while (file.is_open() && line_num < 2) {
             getline(file, line);
             std::stringstream ss(line);
-            ss >> x0 >> x1 >> x2 >> x3;
+            ss >> x0 >> x1;
+            x0 /= 100; //change percentage to fraction of 1
+            x1 /= 100;
             ref_regional_deps[i].setA(line_num, 0, x0);
             ref_regional_deps[i].setA(line_num, 1, x1);
-            ref_regional_deps[i].setA(line_num, 2, x2);
-            ref_regional_deps[i].setA(line_num, 3, x3);
             line_num++;
         }
         std::cout << i << " " << s << std::endl;
+        ref_regional_deps[i].printA(regions[i]);
         file.close();
     }
     std::cout << "- - - - - -" << std::endl;
@@ -76,14 +77,14 @@ void DepResult::readLogFiles(std::string filename){
     std::vector <std::string> regions = {"VESTIBULE", "VALVE", "OLF"
             , "ANTERIOR", "POSTERIOR", "NASO"};
 
-    std::vector<double> u0 = {0, 5, 10, 20};
-    std::vector<double> diam = {5e-06, 1e-05, 1.5e-05, 2e-05, 4e-05}; //micron
+    std::vector<double> u0 = {0, 10};
+    std::vector<double> diam = {5e-06, 2e-05}; //micron
 
     std::cout << "reading log files " << std::endl;
     // file format is plog_number_diam_u0
     for (size_t i=1; i<=n_injection_points; i++) {
-        for (size_t m=0; m<5; m++) {
-            for (size_t n=0; n<4; n++) {
+        for (size_t m=0; m<2; m++) {
+            for (size_t n=0; n<2; n++) {
                 char c;
                 std::string tmp;
                 std::vector<std::string> lines;
@@ -101,7 +102,7 @@ void DepResult::readLogFiles(std::string filename){
                 }
                 int value;
                 for (int j = 0; j < 6; j++) {
-                    for (int k = line.size() - 1; k > 0; k--) {
+                    for (int k = lines.size() - 1; k > 0; k--) {
                         if (lines[k].find(regions[j].c_str()) !=
                                 std::string::npos) {
                             std::stringstream ss(lines[k+2]);
@@ -109,7 +110,7 @@ void DepResult::readLogFiles(std::string filename){
                             std::stringstream tmps(tmp);
                             std::getline(tmps, tmp, ',');
                             value = atoi(tmp.c_str());
-                            double dvalue= double(value) / double(num_particle);
+                            double dvalue = double(value) / double(num_particle); //deposition fraction of 1
                             regional_deps[j].addToA(m, n, dvalue);
                             break;
                         }
@@ -121,7 +122,7 @@ void DepResult::readLogFiles(std::string filename){
     }
     for (int j = 0; j < 6; j++) {
         regional_deps[j].devideABy(double(n_injection_points));
-        regional_deps[j].printA();
+        regional_deps[j].printA(regions[j]);
     }
     std::cout << "- - - - - -" << std::endl;
 }
@@ -142,6 +143,7 @@ void DepResult::F() {
             }
         }
     }
+    norm = sqrt(norm);
 }
 
 void DepResult::addToNormFile() {

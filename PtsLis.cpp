@@ -52,6 +52,7 @@ void PtsLis::readFile()
     std::string line;
     std::vector<Point> cps;
 
+    n_points=0;
     if (myInFile.is_open())
     {
         while (std::getline(myInFile, line))
@@ -67,6 +68,7 @@ void PtsLis::readFile()
             tmp_pt.setZ(z);
             tmp_pt.setFlag(tmp_f);
             cps.push_back(tmp_pt);
+            n_points++;
         }
     }
     else

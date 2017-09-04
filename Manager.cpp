@@ -4,6 +4,8 @@
 
 #include <cmath>
 #include "Manager.h"
+#include "math.h"
+#include <stdlib.h>
 
 Manager::Manager(double d, PtsLis ptslis)
 {
@@ -58,86 +60,134 @@ void Manager::update() {
     ptsLis_0.readFile();
     n_lines = ptsLis_0.getNumPoints();
 
-    prevPtsLis_0.setInputFileName("pts.lis-prev");
-    prevPtsLis_0.readFile();
-
-    std::ifstream file;
+    std::ifstream norm_file;
     std::string line;
 
     std::vector<double> norms;
     // read norms from norm.tmp file which is written by depresult class
-    file.open("norm.tmp");
-    if (file.is_open())
-    {
-        while (std::getline(file, line))
-        {
+    norm_file.open("norm.tmp");
+    if (norm_file.is_open()) {
+        while (std::getline(norm_file, line)) {
             std::stringstream ss(line);
             double nn;
             ss >> nn;
             norms.push_back(nn);
         }
-    }
-    else
-    {
+    } else {
         std::cout << "Error! check if the norm.tmp file can be opened ..."
                   << std::endl;
     }
-    file.close();
+    norm_file.close();
 
+    std::ifstream grad_file;
     //read the current grad_prev from previous grad file still here
-    file.open("grad");
-    if (file.is_open())
-    {
-        while (std::getline(file, line))
-        {
+    if (std::ifstream("grad-prev")) {
+        grad_file.open("grad-prev");
+        while (std::getline(grad_file, line)) {
             std::stringstream ss(line);
-            double nn;
-            ss >> nn;
-            grad_prev.push_back(nn);
+            double gg;
+            ss >> gg;
+            grad_prev.push_back(gg);
+        }
+    } else {
+        // if there is no grad file already existing
+        for (size_t i = 0; i <= n_lines; i++) {
+            grad_prev.push_back(0);
         }
     }
-    else
-    {
-        std::cout << "Error! check if the norm.tmp file can be opened ..."
-                  << std::endl;
-    }
-    file.close();
+    grad_file.close();
 
     //calculate the current step explicit gradient
     double D;
-    for (size_t i=1; i<n_lines; i++) {
-        D =(norms[i]-norms[0])/delta;
+    for (size_t i = 0; i <= n_lines; i++) {
+        D = (norms[i] - norms[0]) / delta;
         grad.push_back(D); // this is explicit grad{n}
     }
 
-    double gamma_denom=0;
-    double gamma_numer=0;
-    for (size_t i=0; i<n_lines; i++){
-        gamma_denom += pow(grad[i]-grad_prev[i], 2);
-        gamma_numer += (
-                               ptsLis_0.getPoints()[i].getX() -
-                                       prevPtsLis_0.getPoints()[i].getX()
-                       )*(grad[i]-grad_prev[i]);
+    // normalizing the gradient vector
+    double sum = 0;
+    for (size_t i = 0; i <= n_lines; i++) {
+        sum += pow(grad[i], 2);
+    }
+    sum = sqrt(sum);
+    double SMALL = 1e-6;
+    if (sum > SMALL) {
+        for (size_t i = 0; i <= n_lines; i++) {
+            grad[i] = grad[i] / sum;
+        }
+    } else {
+        for (size_t i = 0; i <= n_lines; i++) {
+            std::cout << "gradient vector length is very small so set to zero! " << std::endl;
+            grad[i] = 0;
+        }
+    }
+    //
+
+    if (std::ifstream("pts.lis-prev") && sum > SMALL) {
+        prevPtsLis_0.setInputFileName("pts.lis-prev");
+        prevPtsLis_0.readFile();
+        double gamma_denom = 0;
+        double gamma_numer = 0;
+        for (size_t i = 1; i <= n_lines; i++) {
+            gamma_denom += pow(grad[i] - grad_prev[i], 2);
+            gamma_numer += (
+                                   ptsLis_0.getPoints()[i].getX() -
+                                   prevPtsLis_0.getPoints()[i].getX()
+                           ) * (grad[i] - grad_prev[i]);
+        }
+        if (gamma_denom == 0){
+            gamma = delta;
+        } else {
+            gamma = gamma_numer / gamma_denom;
+        }
+    } else {
+        std::cout << "no previous pts.lis-prev found. "
+                "using delta as gamma .." << std::endl;
+        gamma = delta;
     }
 
-    gamma = gamma_numer/gamma_denom;
-
+    // gamma = delta; //to be reformed and the above commented section to be implemented
     newPtsLis_0 = ptsLis_0;
-    for (size_t i=1; i<n_lines; i++)
-    {
-        newPtsLis_0.differOnePoint(i, gamma*grad[i]);
+    if (sum > SMALL && gamma > SMALL) {
+        for (size_t i = 1; i <= n_lines; i++)
+            newPtsLis_0.differOnePoint(i - 1, -1.0 * gamma * grad[i]);
+    } else {
+            std::cout << "gradient lenght or gamma is too small!" << std::endl;
+            for (size_t i = 1; i <= n_lines; i++)
+                newPtsLis_0.differOnePoint(i - 1, -1.0 * grad[i]);
     }
+
+    std::ofstream gamma_file;
+    gamma_file.open("gamma-update");
+    gamma_file << gamma << std::endl;
+    gamma_file.close();
 }
 
 void Manager::printGrad() {
     std::ofstream file;
     file.open("grad-update");
-    for (size_t i=0; i<n_lines; i++){
+    for (size_t i=0; i<=n_lines; i++){
         file << grad[i] << std::endl;
     }
+    file.close();
 }
 
 void Manager::printNewMasterPtsLis() {
     newPtsLis_0.setOutputFileName("pts.lis-update");
     newPtsLis_0.printFile();
+}
+
+void Manager::printCompareGrad() {
+    double c=0;
+    double s=0;
+    for (size_t i=0; i<=n_lines; i++){
+        c += grad[i]*grad_prev[i];
+        s += grad[i]*grad[i];
+    }
+    c /= s;
+
+    std::ofstream file;
+    file.open("compare.txt");
+    file << c;
+    file.close();
 }

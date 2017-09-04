@@ -27,6 +27,7 @@ public:
     void printPtsLisFiles();
     void printGrad();
     void printNewMasterPtsLis();
+    void printCompareGrad();
 };
 
 #endif //GENNEWPOINTS_MANAGER_H

@@ -23,7 +23,7 @@ public:
     double getA(size_t, size_t);
     void setA(size_t, size_t, double);
     void addToA(size_t, size_t, double);
-    void printA();
+    void printA(std::string);
     void devideABy(double);
 };
 
