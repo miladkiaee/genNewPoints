@@ -123,6 +123,7 @@ void Manager::update() {
     }
     //
 
+    /*
     if (std::ifstream("pts.lis-prev") && sum > SMALL) {
         prevPtsLis_0.setInputFileName("pts.lis-prev");
         prevPtsLis_0.readFile();
@@ -130,6 +131,7 @@ void Manager::update() {
         double gamma_numer = 0;
         for (size_t i = 1; i <= n_lines; i++) {
             gamma_denom += pow(grad[i] - grad_prev[i], 2);
+
             gamma_numer += (
                                    ptsLis_0.getPoints()[i].getX() -
                                    prevPtsLis_0.getPoints()[i].getX()
@@ -145,6 +147,9 @@ void Manager::update() {
                 "using delta as gamma .." << std::endl;
         gamma = delta;
     }
+     */
+
+    gamma = delta;
 
     // gamma = delta; //to be reformed and the above commented section to be implemented
     newPtsLis_0 = ptsLis_0;
@@ -175,19 +180,4 @@ void Manager::printGrad() {
 void Manager::printNewMasterPtsLis() {
     newPtsLis_0.setOutputFileName("pts.lis-update");
     newPtsLis_0.printFile();
-}
-
-void Manager::printCompareGrad() {
-    double c=0;
-    double s=0;
-    for (size_t i=0; i<=n_lines; i++){
-        c += grad[i]*grad_prev[i];
-        s += grad[i]*grad[i];
-    }
-    c /= s;
-
-    std::ofstream file;
-    file.open("compare.txt");
-    file << c;
-    file.close();
 }

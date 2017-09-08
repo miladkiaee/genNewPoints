@@ -12,7 +12,27 @@ int main(int argc, char* argv[]) {
         PtsLis crntPtsLis;
         crntPtsLis.setInputFileName("pts.lis");
         crntPtsLis.readFile();
-        double delta = atof(argv[2]);
+
+        double delta;
+
+        std::ifstream file;
+        file.open("DELTAX");
+        std::string line;
+        getline(file, line);
+        file.close();
+
+        std::stringstream ss(line);
+        std::string tmp;
+        ss >> tmp;
+
+        delta = atof(tmp.c_str());
+
+        /*
+        std::cout << "tmp = " << tmp << std::endl;
+        std::cout << "line = " << line << std::endl;
+        std::cout << "delta = " << delta << std::endl;
+        */
+
         Manager manager(delta, crntPtsLis);
         manager.printPtsLisFiles();
     }
@@ -30,42 +50,79 @@ int main(int argc, char* argv[]) {
     {
         double delta;
 
-        if (argc == 3){
-            delta = atof(argv[2]);
-        } else {
-            std::cout << "delta is not set. using default value."
-                      << std::endl;
-            delta = 0.0005;
-        }
+        std::ifstream file;
+        file.open("DELTAX");
+        std::string line;
+        getline(file, line);
+        file.close();
+        std::stringstream ss(line);
+        std::string tmp;
+        ss >> tmp;
+
+        delta = atof(tmp.c_str());
 
         Manager manager(delta);
         manager.update();
         manager.printGrad();
         manager.printNewMasterPtsLis();
-        manager.printCompareGrad();
-
     }
 
     if (input == "compare_grads"){
-        std::ifstream file;
-        file.open("compare.txt");
 
+        std::ifstream file, prevFile;
+
+        std::vector <double> g, gprev;
+        size_t n = 0;
         std::string line;
 
-        std::getline(file, line);
+        file.open("grad-update");
+        prevFile.open("grad-prev");
 
-        std::stringstream ss(line);
-        double tmp;
-        ss >> tmp;
+        while (getline(file, line)){
+            std::stringstream ss(line);
+            double tmp;
+            ss >> tmp;
+            g.push_back(tmp);
+            n++;
+        }
+        file.close();
 
-        if (tmp < -0.5){
+        while (getline(prevFile, line)){
+            std::stringstream ss(line);
+            double tmp;
+            ss >> tmp;
+            gprev.push_back(tmp);
+        }
+        file.close();
+
+        double c=0;
+        double s=0;
+        for (size_t i=0; i<=n; i++){
+            c += g[i]*gprev[i];
+            s += gprev[i]*gprev[i];
+        }
+        c /= s;
+
+        if (c < -0.5){
+            double del;
+            std::ifstream file;
+            file.open("DELTAX");
+            std::string line;
+            getline(file, line);
+            std::stringstream ss(line);
+
+            std::string tmp;
+            ss >> tmp;
+
+            del = atof(tmp.c_str());
+
+            del /= 2;
+
             std::ofstream ffile;
-            ffile.open("change_delta");
-            ffile << "indicator for change of step size!!";
+            ffile.open("DELTAX-update");
+            ffile << del;
             ffile.close();
         }
-
-        file.close();
     }
 
     if (input == "gen_plotdata") {
@@ -99,7 +156,7 @@ int main(int argc, char* argv[]) {
                 double tmp;
                 ss >> tmp;
                 nrm.push_back(tmp);
-                nrm[i] = nrm[i]/nrm[0];
+                //nrm[i] = nrm[i]/nrm[0];
             }
             nFile.close();
 
@@ -117,8 +174,9 @@ int main(int argc, char* argv[]) {
             gFile.close();
 
             std::ostringstream poss;
-            poss << "_" << i ;
+            poss << "_" << i+1 ;
             std::string pname = p + poss.str();
+            std::cout << pname << " : " << std::endl;
 
             pFile.open(pname.c_str());
             while(std::getline(pFile, line)){
@@ -127,6 +185,7 @@ int main(int argc, char* argv[]) {
                 std::string st;
                 ss >> st >> tmp;
                 pts.push_back(100.0*tmp);
+                std::cout << pts.back() << std::endl;
             }
             pFile.close();
         }
@@ -136,26 +195,61 @@ int main(int argc, char* argv[]) {
         file << "# x    y" << std::endl;
 
         for (size_t i=0; i<N; i++){
-            file << i+1 << "  " << nrm[i*(Npts)] << std::endl;
+            file << i+1 << "  " << nrm[i*(Npts+1)] << std::endl;
         }
 
         file.close();
 
-        file.open("grad.dat");
+        file.open("grad1.dat");
         file << "# x    y" << std::endl;
 
         for (size_t i=0; i<N; i++){
-            file << i+1 << "  " << sqrt(pow(grd[i*(Npts)+1],2)
-		+ pow(grd[i*(Npts)+2],2)) << std::endl;
+            file << i+1 << "  " << grd[i*(Npts+1) + 1] << std::endl;
         }
 
         file.close();
 
-        file.open("ptsx.dat");
+	file.open("grad2.dat");
         file << "# x    y" << std::endl;
 
         for (size_t i=0; i<N; i++){
-            file << i+1 << "  " << pts[i*(Npts-1)] << std::endl;
+            file << i+1 << "  " << grd[i*(Npts+1) + 2] << std::endl;
+        }
+
+        file.close();
+
+	file.open("grad3.dat");
+        file << "# x    y" << std::endl;
+
+        for (size_t i=0; i<N; i++){
+            file << i+1 << "  " << grd[i*(Npts+1) + 3] << std::endl;
+        }
+
+        file.close();
+
+        file.open("ptsx1.dat");
+        file << "# x    y" << std::endl;
+
+        for (size_t i=0; i<N; i++){
+            file << i+1 << "  " << pts[i*(Npts)] << std::endl;
+        }
+
+        file.close();
+
+        file.open("ptsx2.dat");
+        file << "# x    y" << std::endl;
+
+        for (size_t i=0; i<N; i++){
+            file << i+1 << "  " << pts[i*(Npts) + 1] << std::endl;
+        }
+
+        file.close();
+
+        file.open("ptsx3.dat");
+        file << "# x    y" << std::endl;
+
+        for (size_t i=0; i<N; i++){
+            file << i+1 << "  " << pts[i*(Npts) + 2] << std::endl;
         }
 
         file.close();
