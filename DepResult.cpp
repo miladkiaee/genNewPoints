@@ -146,11 +146,20 @@ void DepResult::F() {
     norm = sqrt(norm);
 }
 
-void DepResult::addToNormFile() {
+void DepResult::addToNormFile(int i, std::string output) {
     std::ofstream file;
+    std::ofstream dakfile;
+    file.open(output.c_str(), std::fstream::app);
     F();
     file.open("norm.tmp", std::fstream::app);
     std::cout << "adding norm " << norm << " to norm file" << std::endl;
     file << norm << std::endl;
+
+    std::ostringstream oss;
+    oss << "n" << i;
+    std::string s = oss.str();
+    dakfile << norm << " " << s << std::endl;
+
     file.close();
+    dakfile.close();
 }

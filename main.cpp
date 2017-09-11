@@ -39,11 +39,13 @@ int main(int argc, char* argv[]) {
 
     if (input == "app_norm")
     {
+        int i = atoi(argv[2]);
+        std::string output = argv[3];
         DepResult dep;
         dep.setNumberOfInjectionPoints(4);
         dep.readRefFiles(); //reads the reference values
         dep.readLogFiles("plog");
-        dep.addToNormFile();
+        dep.addToNormFile(i, output);
     }
     // generates the new set of ptslis objects
     if (input == "update")
