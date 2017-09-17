@@ -77,15 +77,15 @@ void DepResult::readLogFiles(std::string filename){
     std::vector <std::string> regions = {"VESTIBULE", "VALVE", "OLF"
             , "ANTERIOR", "POSTERIOR", "NASO"};
 
-    std::vector<double> u0 = {0, 20};
-    std::vector<double> diam = {5e-06, 2e-05}; //micron
+    std::vector<double> u0 = {0, 10, 20};
+    std::vector<double> diam = {5e-06, 15e-06, 4e-5}; //micron
 
     std::cout << "reading log files " << std::endl;
     // file format is plog_number_diam_u0
     int count = 1;
     for (size_t i=1; i<=n_injection_points; i++) {
-        for (size_t m=0; m<2; m++) {
-            for (size_t n=0; n<2; n++) {
+        for (size_t m=0; m<3; m++) {
+            for (size_t n=0; n<3; n++) {
                 char c;
                 std::string tmp;
                 std::vector<std::string> lines;
