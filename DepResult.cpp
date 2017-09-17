@@ -77,11 +77,12 @@ void DepResult::readLogFiles(std::string filename){
     std::vector <std::string> regions = {"VESTIBULE", "VALVE", "OLF"
             , "ANTERIOR", "POSTERIOR", "NASO"};
 
-    std::vector<double> u0 = {0, 10};
+    std::vector<double> u0 = {0, 20};
     std::vector<double> diam = {5e-06, 2e-05}; //micron
 
     std::cout << "reading log files " << std::endl;
     // file format is plog_number_diam_u0
+    int count = 1;
     for (size_t i=1; i<=n_injection_points; i++) {
         for (size_t m=0; m<2; m++) {
             for (size_t n=0; n<2; n++) {
@@ -93,6 +94,8 @@ void DepResult::readLogFiles(std::string filename){
                 std::string s;
                 oss << "_" << i << "_" << diam[m] << "_" << u0[n];
                 s = filename + oss.str();
+                std::cout << "file name " << count  << " = " << s << std::endl;
+                count ++;
                 // std::cout << s << std::endl;
                 file.open(s.c_str());
                 if (file.is_open()) {
@@ -105,8 +108,10 @@ void DepResult::readLogFiles(std::string filename){
                     for (int k = lines.size() - 1; k > 0; k--) {
                         if (lines[k].find(regions[j].c_str()) !=
                                 std::string::npos) {
+                            std::cout << lines[k+2] << std::endl ;
                             std::stringstream ss(lines[k+2]);
                             ss >> c >> tmp >> c >> tmp;
+                            std::cout << tmp << std::endl;
                             std::stringstream tmps(tmp);
                             std::getline(tmps, tmp, ',');
                             value = atoi(tmp.c_str());
@@ -146,17 +151,17 @@ void DepResult::F() {
     norm = sqrt(norm);
 }
 
-void DepResult::addToNormFile(int i, std::string output) {
+void DepResult::addToNormFile( std::string output) {
     std::ofstream file;
     std::ofstream dakfile;
-    file.open(output.c_str(), std::fstream::app);
+    dakfile.open(output.c_str(), std::fstream::app);
     F();
     file.open("norm.tmp", std::fstream::app);
     std::cout << "adding norm " << norm << " to norm file" << std::endl;
     file << norm << std::endl;
 
     std::ostringstream oss;
-    oss << "n" << i;
+    oss << "norm";
     std::string s = oss.str();
     dakfile << norm << " " << s << std::endl;
 

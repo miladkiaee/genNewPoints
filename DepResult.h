@@ -31,7 +31,7 @@ public:
     void setNumParticle(size_t);
     size_t getNumParticle();
     void F();
-    void addToNormFile(int, std::string);
+    void addToNormFile(std::string);
     void print();
 };
 

@@ -39,13 +39,12 @@ int main(int argc, char* argv[]) {
 
     if (input == "app_norm")
     {
-        int i = atoi(argv[2]);
-        std::string output = argv[3];
+        std::string output = argv[2];
         DepResult dep;
         dep.setNumberOfInjectionPoints(4);
         dep.readRefFiles(); //reads the reference values
         dep.readLogFiles("plog");
-        dep.addToNormFile(i, output);
+        dep.addToNormFile(output);
     }
     // generates the new set of ptslis objects
     if (input == "update")
@@ -257,6 +256,44 @@ int main(int argc, char* argv[]) {
         file.close();
     }
 
+    if (input == "plot"){
+        std::ifstream file;
+
+        std::string line;
+        std::string n = "results.out.";
+
+        std::vector <double> nrms;
+
+        int N = atoi (argv[2]);
+
+        for (size_t i=0; i<N; i++){
+
+            std::ostringstream noss;
+            noss << i+1 ;
+            std::string name = n + noss.str();
+
+            file.open(name.c_str());
+            getline (file, line);
+            std::stringstream ss(line);
+
+            //std::cout << name << std::endl;
+            //std::cout << line << std::endl;
+
+            std::string tmp;
+            ss >> tmp;
+            double d = atof(tmp.c_str());
+            nrms.push_back(d);
+            file.close();
+        }
+
+        std::ofstream ofile;
+        ofile.open("f.dat");
+
+        for (size_t i=0; i<N; i++){
+            ofile << i+1 << "  " << nrms[i] << std::endl;
+        }
+        ofile.close();
+    }
 
     return 0;
 }
