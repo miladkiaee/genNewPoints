@@ -78,7 +78,7 @@ void DepResult::readLogFiles(std::string filename){
             , "ANTERIOR", "POSTERIOR", "NASO"};
 
     std::vector<double> u0 = {0, 10, 20};
-    std::vector<double> diam = {5e-06, 15e-06, 4e-5}; //micron
+    std::vector<double> diam = {5e-06, 1.5e-05, 4e-05}; //micron
 
     std::cout << "reading log files " << std::endl;
     // file format is plog_number_diam_u0
