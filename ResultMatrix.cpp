@@ -5,8 +5,8 @@
 #include "ResultMatrix.h"
 
 ResultMatrix::ResultMatrix() {
-    m=2;
-    n=2;
+    m=5;
+    n=4;
     a = std::vector <std::vector <double> > (m, std::vector<double> (n));
 }
 

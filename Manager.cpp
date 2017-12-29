@@ -121,33 +121,6 @@ void Manager::update() {
             grad[i] = 0;
         }
     }
-    //
-
-    /*
-    if (std::ifstream("pts.lis-prev") && sum > SMALL) {
-        prevPtsLis_0.setInputFileName("pts.lis-prev");
-        prevPtsLis_0.readFile();
-        double gamma_denom = 0;
-        double gamma_numer = 0;
-        for (size_t i = 1; i <= n_lines; i++) {
-            gamma_denom += pow(grad[i] - grad_prev[i], 2);
-
-            gamma_numer += (
-                                   ptsLis_0.getPoints()[i].getX() -
-                                   prevPtsLis_0.getPoints()[i].getX()
-                           ) * (grad[i] - grad_prev[i]);
-        }
-        if (gamma_denom == 0){
-            gamma = delta;
-        } else {
-            gamma = gamma_numer / gamma_denom;
-        }
-    } else {
-        std::cout << "no previous pts.lis-prev found. "
-                "using delta as gamma .." << std::endl;
-        gamma = delta;
-    }
-     */
 
     gamma = delta;
 

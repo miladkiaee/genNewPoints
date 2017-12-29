@@ -18,6 +18,7 @@ private:
     size_t n_injection_points; // number of position of particle injector tip
     std::vector<ResultMatrix> regional_deps; // average contains 6 regional deposition matrices
     std::vector<ResultMatrix> ref_regional_deps; // contains 6 regional reference deposition matrices
+    std::vector<ResultMatrix> ref_sub4_regional_deps;
     double norm;
     size_t num_particle;
 public:
@@ -25,8 +26,11 @@ public:
     DepResult &operator=(DepResult);
     std::vector<ResultMatrix> getRegionalDep();
     std::vector<ResultMatrix> getRefRegionalDep();
+    std::vector<ResultMatrix> getRefRegionalDep_sub4();
     void setNumberOfInjectionPoints(size_t);
+    void readFiles(std::string, std::vector<ResultMatrix>);
     void readRefFiles();
+    void findnAdd(std::string, std::vector<std::string>, size_t, size_t);
     void readLogFiles(std::string);
     void setNumParticle(size_t);
     size_t getNumParticle();

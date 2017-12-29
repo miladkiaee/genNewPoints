@@ -8,7 +8,6 @@ void BSpline::setNumPoints(size_t np) {
     num_points = np;
 }
 
-
 void BSpline::addNextPoint(Point p) {
     internal_points.push_back(p);
 
