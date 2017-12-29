@@ -44,7 +44,7 @@ void ResultMatrix::addToA(size_t i, size_t j, double b) {
     a[i][j] += b;
 }
 
-void ResultMatrix::printA(std::string name){
+void ResultMatrix::printA(std::string name) {
     std::cout << " - - - " << std::endl;
     std::cout << name << " matrix = " << std::endl;
     for (size_t i=0; i<m; i++){

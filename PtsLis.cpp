@@ -12,28 +12,23 @@ PtsLis & PtsLis::operator=(PtsLis A) {
     return *this;
 }
 
-void PtsLis::setPoints(std::vector <Point> cps)
-{
+void PtsLis::setPoints(std::vector <Point> cps) {
     points = cps;
 }
 
-void PtsLis::setInputFileName(std::string s)
-{
+void PtsLis::setInputFileName(std::string s) {
     input_file_name = s;
 }
 
-std::string PtsLis::getInputFileName()
-{
+std::string PtsLis::getInputFileName() {
     return input_file_name;
 }
 
-void PtsLis::setOutputFileName(std::string s)
-{
+void PtsLis::setOutputFileName(std::string s) {
     output_file_name = s;
 }
 
-std::string PtsLis::getOutputFileName()
-{
+std::string PtsLis::getOutputFileName() {
     return output_file_name;
 }
 
@@ -45,18 +40,15 @@ void PtsLis::setNumPoints(size_t n) {
     n_points = n;
 }
 
-void PtsLis::readFile()
-{
+void PtsLis::readFile() {
     std::ifstream myInFile;
     myInFile.open(input_file_name.c_str());
     std::string line;
     std::vector<Point> cps;
 
     n_points=0;
-    if (myInFile.is_open())
-    {
-        while (std::getline(myInFile, line))
-        {
+    if (myInFile.is_open()) {
+        while (std::getline(myInFile, line)) {
             //store the lines
             std::stringstream ss(line);
             Point tmp_pt("",0,0,0);
@@ -71,8 +63,7 @@ void PtsLis::readFile()
             n_points++;
         }
     }
-    else
-    {
+    else {
         std::cout << "Error! check if the pts.files can be opened ..."
                   << std::endl;
     }
@@ -81,12 +72,10 @@ void PtsLis::readFile()
     myInFile.close();
 }
 
-void PtsLis::printFile()
-{
+void PtsLis::printFile() {
     std::ofstream myOutFile;
     myOutFile.open(output_file_name.c_str());
-    for (size_t i=0; i< points.size(); i++)
-    {
+    for (size_t i=0; i< points.size(); i++) {
         myOutFile << points[i].getFlag() << " "
                 << points[i].getX() << " "
                 << points[i].getY() << " "
@@ -95,8 +84,7 @@ void PtsLis::printFile()
     myOutFile.close();
 }
 
-std::vector <Point> PtsLis::getPoints()
-{
+std::vector <Point> PtsLis::getPoints() {
     return points;
 }
 

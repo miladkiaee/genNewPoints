@@ -9,12 +9,12 @@ int main(int argc, char* argv[]) {
 
     if (input == "append_norm")
     {
-        std::string output = argv[2];
-        DepResult dep;
-        dep.setNumberOfInjectionPoints(3);
-        dep.readRefFiles(); //reads the reference values
-        dep.readLogFiles("plog");
-        dep.addToNormFile(output);
+        std::string O = argv[2];
+        DepResult D;
+        D.setNumberOfInjectionPoints(3);
+        D.readRefFiles(); //reads the reference values
+        D.readLogFiles("plog");
+        D.addToNormFile(O);
     }
 
     return 0;
