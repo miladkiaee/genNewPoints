@@ -30,7 +30,7 @@ public:
     void setNumberOfInjectionPoints(size_t);
     void readFiles(std::string, std::vector<ResultMatrix>);
     void readRefFiles();
-    void findnAdd(std::string, std::vector<std::string>, size_t, size_t);
+    void findnAdd(std::vector<std::string>, size_t, size_t);
     void readLogFiles(std::string);
     void setNumParticle(size_t);
     size_t getNumParticle();

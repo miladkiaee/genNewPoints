@@ -24,7 +24,7 @@ DepResult& DepResult::operator=(DepResult A) {
 void DepResult::readFiles(std::string name, std::vector<ResultMatrix> M) {
     std::vector <std::string> rgs = {"vesti", "valve", "olf"
             , "turbinates", "naso", "outlet"};
-    std::cout << "reading ref files " << std::endl;
+    std::cout << "reading " << name << " files " << std::endl;
     for (size_t i=0; i<6; i++){
         std::ifstream f;
         std::string s;
@@ -56,14 +56,16 @@ void DepResult::readFiles(std::string name, std::vector<ResultMatrix> M) {
 }
 
 void DepResult::readRefFiles(){
+    std::cout << "####################### " << std::endl;
     readFiles("ref_", ref_regional_deps);
     readFiles("ref_sub4_", ref_sub4_regional_deps);
-    std::cout << "- - - - - -" << std::endl;
+    std::cout << "#######################" << std::endl;
 }
 
-void DepResult::findnAdd(std::string S, std::vector<std::string> SV, size_t m, size_t n) {
+void DepResult::findnAdd(std::vector<std::string> SV, size_t m, size_t n) {
     int v;
     char c;
+    std::string S;
     std::vector <std::string> rgs = {"VESTIBULE", "VALVE", "OLF"
             , "ANTERIOR", "POSTERIOR", "NASO", "OUTLET"};
     int index=0;
@@ -84,6 +86,7 @@ void DepResult::findnAdd(std::string S, std::vector<std::string> SV, size_t m, s
                 if (rgs[j].c_str() == "POSTERIOR") {
                     index --;
                 }
+                std::cout << dv << " ";
                 regional_deps[index].addToA(m, n, dv);
                 index ++;
                 break;
@@ -100,7 +103,7 @@ void DepResult::readLogFiles(std::string fn) {
     for (size_t i=1; i<=n_injection_points; i++) {
         for (size_t m=0; m<4; m++) {
             for (size_t n=0; n<5; n++) {
-                std::string tmp, ln, s;
+                std::string ln, s;
                 std::vector<std::string> lns;
                 std::ostringstream oss;
                 oss << "_" << i << "_" << _diam_[m] << "_" << _u0_[n];
@@ -109,7 +112,8 @@ void DepResult::readLogFiles(std::string fn) {
                 if (f.is_open())
                     while (std::getline(f, ln))
                         lns.push_back(ln);
-                findnAdd(tmp, lns, m, n);
+                findnAdd(lns, m, n);
+                std::cout << "line " << s << " : " << std::endl;
                 f.close();
             }
         }
@@ -124,7 +128,6 @@ void DepResult::readLogFiles(std::string fn) {
 void DepResult::F() {
     size_t m = regional_deps[0].getM();
     size_t n = regional_deps[0].getN();
-
     //homogeneous scalarization using ferobenous as objective function
     for (size_t q=0; q<regional_deps.size(); q++) {
         for (size_t i = 0; i < m; i++) {
@@ -135,12 +138,13 @@ void DepResult::F() {
         }
     }
     norm = sqrt(norm);
+    norm = norm / 6 / (4*5);
 }
 
-void DepResult::addToNormFile( std::string O) {
+void DepResult::addToNormFile( std::string K) {
     std::ofstream f;
     std::ofstream dakf; //dakota file
-    dakf.open(O.c_str(), std::fstream::app);
+    dakf.open(K.c_str(), std::fstream::app);
     F();
     f.open("norm.tmp", std::fstream::app);
     f << norm << std::endl;
